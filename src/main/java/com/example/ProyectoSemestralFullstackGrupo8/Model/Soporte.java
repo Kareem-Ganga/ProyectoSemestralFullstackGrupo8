@@ -8,12 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Curso {
+public class Soporte {
     private int id;
-    private String titulo;
-    private String descripcion;
-    private String reseña;
-    
-
+    private String nombre;
+    private String contraseña;
+    private String correo;
 }
-

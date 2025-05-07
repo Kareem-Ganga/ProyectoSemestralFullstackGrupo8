@@ -8,12 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Curso {
+public class Administrador {
     private int id;
-    private String titulo;
-    private String descripcion;
-    private String reseña;
-    
-
+    private String contraseña;
 }
-
