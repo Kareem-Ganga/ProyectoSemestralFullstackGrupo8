@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class User {
+public class Curso {
     private int id;
-    private String username;
-    private String contraseña;
-    private String correo;
+    
+
 }
+
