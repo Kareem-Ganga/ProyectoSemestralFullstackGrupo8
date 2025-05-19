@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 @Entity
+
 public class Curso {
 
     @Id
