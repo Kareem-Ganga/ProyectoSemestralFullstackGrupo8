@@ -4,7 +4,6 @@ import com.example.ProyectoSemestralFullstackGrupo8.Model.Estudiante;
 import com.example.ProyectoSemestralFullstackGrupo8.Repository.EstudianteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 @Service
@@ -14,15 +13,6 @@ public class EstudianteService {
 
     @Autowired
     private EstudianteRepository estudianteRepository;
-
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-
-    public boolean login(String correo, String contraseña) {
-        return estudianteRepository.findByEmail(correo)
-                .map(user -> passwordEncoder.matches(contraseña, user.getContraseña()))
-                .orElse(false);
-    }
 
     public String getAllEstudiantes(){
         String output="";
