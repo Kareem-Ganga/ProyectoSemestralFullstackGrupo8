@@ -12,43 +12,41 @@ import java.util.Optional;
 public class EvaluacionService {
 
     @Autowired
-    private EvaluacionRepository evaluacionRepository;
+    EvaluacionRepository evaluacionRepository;
 
-    public List<Evaluacion> getAllEvaluaciones() {
+    public List<Evaluacion> getAllEvaluaciones(){
         return evaluacionRepository.findAll();
     }
 
-    public Optional<Evaluacion> getEvaluacionById(int id) {
-        return evaluacionRepository.findById(id);
+    public Evaluacion getEvaluacionById(int id){
+        return evaluacionRepository.findById(id).get();
     }
+
 
     public Evaluacion addEvaluacion(Evaluacion evaluacion) {
         return evaluacionRepository.save(evaluacion);
     }
 
-    public Evaluacion updateEvaluacion(int id, Evaluacion nuevaEvaluacion) {
-        Optional<Evaluacion> optional = evaluacionRepository.findById(id);
-        if (optional.isPresent()) {
-            Evaluacion evaluacion = optional.get();
-            evaluacion.setTitulo(nuevaEvaluacion.getTitulo());
-            evaluacion.setDescripcion(nuevaEvaluacion.getDescripcion());
-            evaluacion.setEstado(nuevaEvaluacion.getEstado());
-            evaluacion.setRetroalimentacion(nuevaEvaluacion.getRetroalimentacion());
-            evaluacion.setIdEstudiante(nuevaEvaluacion.getIdEstudiante());
-            return evaluacionRepository.save(evaluacion);
-        }
-        return null;
+
+    public Evaluacion updateEvaluacion(int id, Evaluacion evaluacion) {
+        Evaluacion ev = evaluacionRepository.findById(id).get();
+        ev.setTitulo(evaluacion.getTitulo());
+        ev.setDescripcion(evaluacion.getDescripcion());
+        ev.setEstado(evaluacion.getEstado());
+        ev.setRetroalimentacion(evaluacion.getRetroalimentacion());
+        evaluacionRepository.save(ev);
+        return ev;
     }
 
-    public boolean deleteEvaluacion(int id) {
-        if (evaluacionRepository.existsById(id)) {
-            evaluacionRepository.deleteById(id);
-            return true;
-        }
-        return false;
+
+
+    public void deleteEvaluacion(int id){
+        evaluacionRepository.deleteById(id);
     }
 
     public List<Evaluacion> getEvaluacionesPorEstudiante(int idEstudiante) {
         return evaluacionRepository.findByIdEstudiante(idEstudiante);
     }
+
+
 }

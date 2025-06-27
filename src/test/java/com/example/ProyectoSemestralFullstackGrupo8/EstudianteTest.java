@@ -49,7 +49,7 @@ public class EstudianteTest {
 
     @Test
     void checkGetAllEstudianteService(){
-        Mockito.when(estudianteService.getAllEstudiantes()).thenReturn("Lista Completa de Estudiantes");
+        Mockito.when(estudianteService.getAllEstudiantes()).thenReturn(List.of(new Estudiante(1, "Jose","12345","jose@gmail.com")));
 
         try {
             mockMvc.perform(get("/estudiantes"))

@@ -33,7 +33,7 @@ public class CursoController {
     CursoModelAssembler assembler;
 
     @GetMapping
-    @Operation(summary = "Obtener los cursos", description = "Obtiene la lista completa de los cursos registrados en el sistema")
+    @Operation(summary = "Obtener los cursos", description = "Servicio GET para obtener la lista completa de cursos ingresados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "Retorna lista completa de cursos"),
             @ApiResponse(responseCode = "404",description = "No se encontraron datos")
@@ -49,7 +49,7 @@ public class CursoController {
 
 
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar Curso por ID", description = "Se obtiene un curso por su ID")
+    @Operation(summary = "Buscar Curso por ID", description = "Servicio GET para obtener un curso por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "Retorna Curso"),
             @ApiResponse(responseCode = "404",description = "No se encontraron datos")
@@ -65,7 +65,7 @@ public class CursoController {
     }
 
     @PostMapping
-    @Operation(summary = "Agregar Curso", description = "Se agrega un curso en el sistema")
+    @Operation(summary = "Agregar Curso", description = "Servicio POST para agregar nuevos cursos en el sistema")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",description = "Curso agregado",
                     content = @Content(mediaType = "application/json",
@@ -82,7 +82,7 @@ public class CursoController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar Curso por ID", description = "Se Elimina un curso indicando el Id registrado en el sistema")
+    @Operation(summary = "Eliminar Curso por ID", description = "Servicio DELETE a un curso por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "Retorna Curso"),
             @ApiResponse(responseCode = "404",description = "No se encontraron datos")
@@ -99,7 +99,7 @@ public class CursoController {
 
 
     @PutMapping("/{id}")
-    @Operation(summary = "Actualizar Curso", description = "Permite actualizar los datos del Curso mediante la Id")
+    @Operation(summary = "Actualizar Curso", description = "Servicio UPDATE para actualizar un Curso del sistema")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",description = "Curso agregado",
                     content = @Content(mediaType = "application/json",

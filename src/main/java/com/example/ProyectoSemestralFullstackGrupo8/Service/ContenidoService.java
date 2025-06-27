@@ -12,41 +12,31 @@ import java.util.Optional;
 public class ContenidoService {
 
     @Autowired
-    private ContenidoRepository contenidoRepository;
+    ContenidoRepository contenidoRepository;
 
-    public List<Contenido> getAllContenidos() {
+    public List<Contenido> getAllContenidos(){
         return contenidoRepository.findAll();
     }
 
-    public Optional<Contenido> getContenidoById(int id) {
-        return contenidoRepository.findById(id);
+    public Contenido getContenidoById(int id){
+        return contenidoRepository.findById(id).get();
     }
 
-    public Contenido addContenido(Contenido contenido) {
+    public Contenido addContenido(Contenido contenido){
         return contenidoRepository.save(contenido);
     }
 
-    public Contenido updateContenido(int id, Contenido contenidoNuevo) {
-        Optional<Contenido> opt = contenidoRepository.findById(id);
-        if(opt.isPresent()) {
-            Contenido contenido = opt.get();
-            contenido.setTitulo(contenidoNuevo.getTitulo());
-            contenido.setDescripcion(contenidoNuevo.getDescripcion());
-            contenido.setUrlMaterial(contenidoNuevo.getUrlMaterial());
-            contenido.setPublicado(contenidoNuevo.isPublicado());
-            contenido.setCurso(contenidoNuevo.getCurso());
-            contenido.setProfesor(contenidoNuevo.getProfesor());
-            return contenidoRepository.save(contenido);
-        } else {
-            return null;
-        }
+    public Contenido updateContenido(int id, Contenido contenido){
+        Contenido con = contenidoRepository.findById(id).get();
+        con.setTitulo(contenido.getTitulo());
+        con.setDescripcion(contenido.getDescripcion());
+        con.setUrlMaterial(contenido.getUrlMaterial());
+        contenidoRepository.save(con);
+        return con;
     }
 
-    public boolean deleteContenido(int id) {
-        if(contenidoRepository.existsById(id)) {
-            contenidoRepository.deleteById(id);
-            return true;
-        }
-        return false;
+
+    public void deleteContenido(int id){
+        contenidoRepository.deleteById(id);
     }
 }
