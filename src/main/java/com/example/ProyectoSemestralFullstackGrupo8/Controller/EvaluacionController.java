@@ -84,7 +84,7 @@ public class EvaluacionController {
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar Evaluacion", description = "Servicio UPDATE para actualizar una evaluacion del sistema")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201",description = "Evaluacion agregada",
+            @ApiResponse(responseCode = "201",description = "Evaluacion actualizada",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Evaluacion.class))),
             @ApiResponse(responseCode = "204",description = "No se encontraron datos")

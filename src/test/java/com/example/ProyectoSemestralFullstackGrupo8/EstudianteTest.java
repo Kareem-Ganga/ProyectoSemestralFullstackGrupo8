@@ -54,7 +54,7 @@ public class EstudianteTest {
         try {
             mockMvc.perform(get("/estudiantes"))
                     .andExpect(status().isOk())
-                    .andExpect(content().string("Lista Completa de Estudiantes"));
+                    .andExpect(content().string("Retorna lista completa de estudiantes"));
         } catch (Exception ex){
             System.out.println("Error: "+ex.getMessage());
             fail();

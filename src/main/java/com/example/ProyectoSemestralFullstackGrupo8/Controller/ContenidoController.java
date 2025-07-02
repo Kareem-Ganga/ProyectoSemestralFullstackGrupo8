@@ -86,7 +86,7 @@ public class ContenidoController {
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar Contenido", description = "Servicio UPDATE para actualizar un contenido del sistema")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201",description = "Contenido agregado",
+            @ApiResponse(responseCode = "201",description = "Contenido actualizado",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Contenido.class))),
             @ApiResponse(responseCode = "204",description = "No se encontraron datos")

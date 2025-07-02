@@ -101,7 +101,7 @@ public class CursoController {
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar Curso", description = "Servicio UPDATE para actualizar un Curso del sistema")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201",description = "Curso agregado",
+            @ApiResponse(responseCode = "201",description = "Curso actualizado",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Curso.class))),
             @ApiResponse(responseCode = "204",description = "No se encontraron datos")

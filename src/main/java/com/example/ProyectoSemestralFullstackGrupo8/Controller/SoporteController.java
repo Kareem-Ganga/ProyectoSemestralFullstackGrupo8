@@ -99,7 +99,7 @@ public class SoporteController {
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar Soporte", description = "Servicio UPDATE para actualizar un soporte del sistema")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201",description = "Soporte agregado",
+            @ApiResponse(responseCode = "201",description = "Soporte actualizado",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Soporte.class))),
             @ApiResponse(responseCode = "204",description = "No se encontraron datos")

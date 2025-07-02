@@ -38,7 +38,7 @@ public class EstudianteController {
     @GetMapping
     @Operation(summary = "Obtener estudiantes", description = "Servicio GET para obtener la lista completa de estudiantes ingresados")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "Retorna lista completa de cursos"),
+            @ApiResponse(responseCode = "200",description = "Retorna lista completa de estudiantes"),
             @ApiResponse(responseCode = "404",description = "No se encontraron datos")
     })
     public ResponseEntity<CollectionModel<EntityModel<Estudiante>>> getAllEstudiantes(){
@@ -52,15 +52,15 @@ public class EstudianteController {
 
 
     @PostMapping
-    @Operation(summary = "Agregar Curso", description = "Servicio POST para agregar nuevos estudiantes en la lista")
+    @Operation(summary = "Agregar Estudiante", description = "Servicio POST para agregar nuevos estudiantes en la lista")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201",description = "Curso agregado",
+            @ApiResponse(responseCode = "201",description = "Estudiante agregado",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Estudiante.class))),
             @ApiResponse(responseCode = "404",description = "No se encontraron datos")
     })
-    public ResponseEntity<Estudiante> addEstudiante(@RequestBody Estudiante curso){
-        Estudiante nuevoEstudiante = estudianteService.addEstudiante(curso);
+    public ResponseEntity<Estudiante> addEstudiante(@RequestBody Estudiante estudiante){
+        Estudiante nuevoEstudiante = estudianteService.addEstudiante(estudiante);
         if (nuevoEstudiante!=null){
             return new ResponseEntity<>(HttpStatus.CREATED);
         }else{
@@ -70,7 +70,7 @@ public class EstudianteController {
 
 
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar Curso por ID", description = "Servicio GET para obtener un estudiante por su ID")
+    @Operation(summary = "Buscar Estudiante por ID", description = "Servicio GET para obtener un estudiante por su ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "Retorna Estudiante"),
             @ApiResponse(responseCode = "404",description = "No se encontraron datos")
@@ -106,7 +106,7 @@ public class EstudianteController {
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar Estudiante", description = "Servicio UPDATE para actualizar a un estudiante")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201",description = "Curso agregado",
+            @ApiResponse(responseCode = "201",description = "Estudiante actualizado",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Estudiante.class))),
             @ApiResponse(responseCode = "204",description = "No se encontraron datos")
