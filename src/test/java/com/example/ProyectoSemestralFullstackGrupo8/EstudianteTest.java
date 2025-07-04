@@ -1,64 +1,79 @@
 package com.example.ProyectoSemestralFullstackGrupo8;
 
-
 import com.example.ProyectoSemestralFullstackGrupo8.Model.Estudiante;
 import com.example.ProyectoSemestralFullstackGrupo8.Repository.EstudianteRepository;
 import com.example.ProyectoSemestralFullstackGrupo8.Service.EstudianteService;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.*;
 
-import java.util.List;
-
-@SpringBootTest
-@AutoConfigureMockMvc
 public class EstudianteTest {
 
-    @Autowired
-    EstudianteRepository estudianteRepository;
+    @Mock
+    private EstudianteRepository estudianteRepository;
 
-    @Autowired
-    MockMvc mockMvc;
+    @InjectMocks
+    private EstudianteService estudianteService;
 
-    @MockBean
-    EstudianteService estudianteService;
+    private Estudiante estudianteMock;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+
+        estudianteMock = new Estudiante();
+        estudianteMock.setId(1);
+        estudianteMock.setUsername("flieguen");
+        estudianteMock.setContraseña("1234");
+        estudianteMock.setCorreo("flieguen@example.com");
+    }
 
     @Test
-    void FindAllEstudiantes(){
-        List<Estudiante> estudiantes = estudianteRepository.findAll();
+    void testGetAllEstudiantes() {
+        when(estudianteRepository.findAll()).thenReturn(List.of(estudianteMock));
+
+        List<Estudiante> estudiantes = estudianteService.getAllEstudiantes();
 
         assertNotNull(estudiantes);
-        assertEquals(1,estudiantes.size());
-
+        assertEquals(1, estudiantes.size());
+        assertEquals("flieguen", estudiantes.get(0).getUsername());
     }
 
     @Test
-    void checkNameEstudiante(){
-        Estudiante estudiante = estudianteRepository.findById(1).get();
+    void testGetEstudianteById() {
+        when(estudianteRepository.findById(1)).thenReturn(Optional.of(estudianteMock));
+
+        Estudiante estudiante = estudianteService.getEstudianteById(1);
+
         assertNotNull(estudiante);
-        assertEquals("Jose",estudiante.getUsername());
+        assertEquals("flieguen", estudiante.getUsername());
     }
 
     @Test
-    void checkGetAllEstudianteService(){
-        Mockito.when(estudianteService.getAllEstudiantes()).thenReturn(List.of(new Estudiante(1, "Jose","12345","jose@gmail.com")));
+    void testAddEstudiante() {
+        when(estudianteRepository.save(estudianteMock)).thenReturn(estudianteMock);
 
-        try {
-            mockMvc.perform(get("/estudiantes"))
-                    .andExpect(status().isOk())
-                    .andExpect(content().string("Retorna lista completa de estudiantes"));
-        } catch (Exception ex){
-            System.out.println("Error: "+ex.getMessage());
-            fail();
-        }
+        Estudiante nuevoEstudiante = estudianteService.addEstudiante(estudianteMock);
+
+        assertNotNull(nuevoEstudiante);
+        assertEquals("flieguen", nuevoEstudiante.getUsername());
+        verify(estudianteRepository, times(1)).save(estudianteMock);
     }
 
+    @Test
+    void testDeleteEstudiante() {
+        doNothing().when(estudianteRepository).deleteById(1);
+
+        estudianteService.deleteEstudiante(1);
+
+        verify(estudianteRepository, times(1)).deleteById(1);
+    }
 }

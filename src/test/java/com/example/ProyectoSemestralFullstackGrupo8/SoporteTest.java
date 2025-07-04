@@ -1,56 +1,79 @@
 package com.example.ProyectoSemestralFullstackGrupo8;
+
 import com.example.ProyectoSemestralFullstackGrupo8.Model.Soporte;
 import com.example.ProyectoSemestralFullstackGrupo8.Repository.SoporteRepository;
 import com.example.ProyectoSemestralFullstackGrupo8.Service.SoporteService;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.*;
 
-import java.util.List;
-
-@SpringBootTest
-@AutoConfigureMockMvc
 public class SoporteTest {
-    @Autowired
-    SoporteRepository soporteRepository;
 
-    @Autowired
-    MockMvc mockMvc;
+    @Mock
+    private SoporteRepository soporteRepository;
 
-    @MockBean
-    SoporteService soporteService;
+    @InjectMocks
+    private SoporteService soporteService;
+
+    private Soporte soporteMock;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+
+        soporteMock = new Soporte();
+        soporteMock.setId(1);
+        soporteMock.setNombre("Soporte Admin");
+        soporteMock.setCorreo("soporte@plataforma.com");
+        soporteMock.setContraseña("password123");
+    }
 
     @Test
-    void FindAllSoporte(){
-        List<Soporte> soportes=soporteRepository.findAll();
+    void testGetAllSoportes() {
+        when(soporteRepository.findAll()).thenReturn(List.of(soporteMock));
+
+        List<Soporte> soportes = soporteService.getAllSoportes();
+
         assertNotNull(soportes);
-        assertEquals(1,soportes.size());
+        assertEquals(1, soportes.size());
+        assertEquals("Soporte Admin", soportes.get(0).getNombre());
     }
 
     @Test
-    void checkNameSoporte(){
-        Soporte soporte=soporteRepository.findById(1).get();
+    void testGetSoporteById() {
+        when(soporteRepository.findById(1)).thenReturn(Optional.of(soporteMock));
+
+        Soporte soporte = soporteService.getSoporteById(1);
+
         assertNotNull(soporte);
-        assertEquals("Pepito",soporte.getNombre());
+        assertEquals("soporte@plataforma.com", soporte.getCorreo());
     }
 
     @Test
-    void checkGetAllSoporteService(){
-        Mockito.when(soporteService.getAllSoportes()).thenReturn(List.of(new Soporte()));
+    void testAddSoporte() {
+        when(soporteRepository.save(soporteMock)).thenReturn(soporteMock);
 
-        try{
-            mockMvc.perform(get("/soportes")).andExpect(status().isOk()).andExpect(content().string("Retorna lista completa de soportes"));
-        } catch (Exception e) {
-            System.out.println("Error al obtener la lista completa de soportes"+e.getMessage());
-            fail();
-        }
+        Soporte nuevo = soporteService.addSoporte(soporteMock);
+
+        assertNotNull(nuevo);
+        assertEquals("Soporte Admin", nuevo.getNombre());
+        verify(soporteRepository, times(1)).save(soporteMock);
+    }
+
+    @Test
+    void testDeleteSoporte() {
+        doNothing().when(soporteRepository).deleteById(1);
+
+        soporteService.deleteSoporte(1);
+
+        verify(soporteRepository, times(1)).deleteById(1);
     }
 }

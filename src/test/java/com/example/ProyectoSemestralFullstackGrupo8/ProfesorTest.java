@@ -1,57 +1,79 @@
 package com.example.ProyectoSemestralFullstackGrupo8;
+
 import com.example.ProyectoSemestralFullstackGrupo8.Model.Profesor;
 import com.example.ProyectoSemestralFullstackGrupo8.Repository.ProfesorRepository;
 import com.example.ProyectoSemestralFullstackGrupo8.Service.ProfesorService;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.*;
 
-
-import java.util.List;
-
-@SpringBootTest
-@AutoConfigureMockMvc
 public class ProfesorTest {
-    @Autowired
-    ProfesorRepository profesorRepository;
 
-    @Autowired
-    MockMvc mockMvc;
+    @Mock
+    private ProfesorRepository profesorRepository;
 
-    @MockBean
-    ProfesorService profesorService;
+    @InjectMocks
+    private ProfesorService profesorService;
+
+    private Profesor profesorMock;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+
+        profesorMock = new Profesor();
+        profesorMock.setId(1);
+        profesorMock.setNombre("Juan Pérez");
+        profesorMock.setCorreo("juan.perez@example.com");
+        profesorMock.setContraseña("secure123");
+    }
 
     @Test
-    void FindAllProfesores(){
-        List<Profesor> profesores = profesorRepository.findAll();
+    void testGetAllProfesores() {
+        when(profesorRepository.findAll()).thenReturn(List.of(profesorMock));
+
+        List<Profesor> profesores = profesorService.getAllProfesores();
+
         assertNotNull(profesores);
         assertEquals(1, profesores.size());
+        assertEquals("Juan Pérez", profesores.get(0).getNombre());
     }
 
     @Test
-    void checkNameProfesor(){
-        Profesor profesor = profesorRepository.findById(1).get();
+    void testGetProfesorById() {
+        when(profesorRepository.findById(1)).thenReturn(Optional.of(profesorMock));
+
+        Profesor profesor = profesorService.getProfesorById(1);
+
         assertNotNull(profesor);
-        assertEquals("Ignacio",profesor.getNombre());
+        assertEquals("juan.perez@example.com", profesor.getCorreo());
     }
 
     @Test
-    void checkGetAllProfesorService(){
-        Mockito.when(profesorService.getAllProfesores()).thenReturn(List.of());
-        try {
-            mockMvc.perform(get("/profesores")).andExpect(status().isOk()).andExpect(content().string("Retorna la lista completa de Profesores"));
-        } catch (Exception e) {
-            System.out.println("Error al obtener la lista completa de Profesores"+e.getMessage());
-            fail();
-        }
+    void testAddProfesor() {
+        when(profesorRepository.save(profesorMock)).thenReturn(profesorMock);
+
+        Profesor nuevo = profesorService.addProfesor(profesorMock);
+
+        assertNotNull(nuevo);
+        assertEquals("Juan Pérez", nuevo.getNombre());
+        verify(profesorRepository, times(1)).save(profesorMock);
     }
 
+    @Test
+    void testDeleteProfesorById() {
+        doNothing().when(profesorRepository).deleteById(1);
+
+        profesorService.deleteProfesorById(1);
+
+        verify(profesorRepository, times(1)).deleteById(1);
+    }
 }

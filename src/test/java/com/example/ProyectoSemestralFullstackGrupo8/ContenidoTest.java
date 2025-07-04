@@ -1,55 +1,82 @@
 package com.example.ProyectoSemestralFullstackGrupo8;
+
 import com.example.ProyectoSemestralFullstackGrupo8.Model.Contenido;
 import com.example.ProyectoSemestralFullstackGrupo8.Repository.ContenidoRepository;
 import com.example.ProyectoSemestralFullstackGrupo8.Service.ContenidoService;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import java.util.List;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ContenidoTest {
 
-    @Autowired
-    ContenidoRepository contenidoRepository;
+    @Mock
+    private ContenidoRepository contenidoRepository;
 
-    @Autowired
-    MockMvc mockMvc;
+    @InjectMocks
+    private ContenidoService contenidoService;
 
-    @MockBean
-    ContenidoService contenidoService;
+    private Contenido contenidoMock;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        contenidoMock = new Contenido();
+        contenidoMock.setId(1);
+        contenidoMock.setTitulo("Matematicas");
+        contenidoMock.setDescripcion("Clase de álgebra");
+        contenidoMock.setUrlMaterial("http://example.com/matematicas");
+    }
 
     @Test
-    void FindAllContenidos(){
-        List<Contenido> contenidos = contenidoRepository.findAll();
+    void testGetAllContenidos() {
+        when(contenidoRepository.findAll()).thenReturn(List.of(contenidoMock));
+
+        List<Contenido> contenidos = contenidoService.getAllContenidos();
+
         assertNotNull(contenidos);
-        assertEquals(1,contenidos.size());
+        assertEquals(1, contenidos.size());
+        assertEquals("Matematicas", contenidos.get(0).getTitulo());
     }
 
     @Test
-    void checkNameContenido(){
-        Contenido contenido = contenidoRepository.findById(1).get();
+    void testGetContenidoById() {
+        when(contenidoRepository.findById(1)).thenReturn(Optional.of(contenidoMock));
+
+        Contenido contenido = contenidoService.getContenidoById(1);
+
         assertNotNull(contenido);
-        assertEquals("Matematicas",contenido.getTitulo());
+        assertEquals("Matematicas", contenido.getTitulo());
     }
 
     @Test
-    void checkGetAllContenidoService(){
-        Mockito.when(contenidoService.getAllContenidos()).thenReturn(List.of(new Contenido()));
-        try{
-            mockMvc.perform(get("/contenidos")).andExpect(status().isOk()).andExpect(content().string("Retorna lista completa de contenidos"));
-        } catch (Exception e) {
-            System.out.println("Error al obtener la lista completa de contenidos"+e.getMessage());
-            fail();
-        }
+    void testAddContenido() {
+        when(contenidoRepository.save(contenidoMock)).thenReturn(contenidoMock);
+
+        Contenido resultado = contenidoService.addContenido(contenidoMock);
+
+        assertNotNull(resultado);
+        assertEquals("Matematicas", resultado.getTitulo());
+        verify(contenidoRepository, times(1)).save(contenidoMock);
+    }
+
+    @Test
+    void testDeleteContenido() {
+        doNothing().when(contenidoRepository).deleteById(1);
+
+        contenidoService.deleteContenido(1);
+
+        verify(contenidoRepository, times(1)).deleteById(1);
     }
 }

@@ -1,57 +1,78 @@
 package com.example.ProyectoSemestralFullstackGrupo8;
 
-
 import com.example.ProyectoSemestralFullstackGrupo8.Model.Curso;
 import com.example.ProyectoSemestralFullstackGrupo8.Repository.CursoRepository;
 import com.example.ProyectoSemestralFullstackGrupo8.Service.CursoService;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.*;
 
-import java.util.List;
-
-@SpringBootTest
-@AutoConfigureMockMvc
 public class CursoTest {
-    @Autowired
-    CursoRepository cursoRepository;
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Mock
+    private CursoRepository cursoRepository;
 
-    @MockBean
+    @InjectMocks
     private CursoService cursoService;
 
-    @Test
-    void FindAllCursos(){
-        List<Curso> curso = cursoRepository.findAll();
-        assertNotNull(curso);
-        assertEquals(1,curso.size());
+    private Curso cursoMock;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        cursoMock = new Curso();
+        cursoMock.setId(1);
+        cursoMock.setTitulo("Programación");
+        cursoMock.setDescripcion("Curso básico de Java");
+        cursoMock.setReseña("Excelente introducción a la programación.");
     }
 
     @Test
-    void checkNameCurso(){
-        Curso curso = cursoRepository.findById(1).get();
-        assertNotNull(curso);
-        assertEquals(1,curso.getId());
+    void testGetAllCursos() {
+        when(cursoRepository.findAll()).thenReturn(List.of(cursoMock));
+
+        List<Curso> cursos = cursoService.getAllCursos();
+
+        assertNotNull(cursos);
+        assertEquals(1, cursos.size());
+        assertEquals("Programación", cursos.get(0).getTitulo());
     }
 
     @Test
-    void checkGetAllCursosService(){
-        Mockito.when(cursoService.getAllCursos()).thenReturn(List.of(new Curso()));
-        try{
-            mockMvc.perform(get("/cursos")).andExpect(status().isOk()).andExpect(content().string("Retorna lista completa de cursos"));
-        }catch (Exception ex){
-            System.out.println("Error: "+ex.getMessage());
-            fail();
-        }
+    void testGetCursoById() {
+        when(cursoRepository.findById(1)).thenReturn(Optional.of(cursoMock));
+
+        Curso curso = cursoService.getCursoById(1);
+
+        assertNotNull(curso);
+        assertEquals("Programación", curso.getTitulo());
+    }
+
+    @Test
+    void testAddCurso() {
+        when(cursoRepository.save(cursoMock)).thenReturn(cursoMock);
+
+        Curso nuevoCurso = cursoService.addCurso(cursoMock);
+
+        assertNotNull(nuevoCurso);
+        assertEquals("Programación", nuevoCurso.getTitulo());
+        verify(cursoRepository, times(1)).save(cursoMock);
+    }
+
+    @Test
+    void testDeleteCurso() {
+        doNothing().when(cursoRepository).deleteById(1);
+
+        cursoService.deleteCurso(1);
+
+        verify(cursoRepository, times(1)).deleteById(1);
     }
 }
