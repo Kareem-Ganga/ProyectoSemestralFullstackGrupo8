@@ -25,7 +25,7 @@ public class SoporteTest {
     @Autowired
     MockMvc mockMvc;
 
-    @MockitoBean
+    @MockBean
     SoporteService soporteService;
 
     @Test

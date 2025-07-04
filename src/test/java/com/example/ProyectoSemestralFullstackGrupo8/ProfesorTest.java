@@ -26,7 +26,7 @@ public class ProfesorTest {
     @Autowired
     MockMvc mockMvc;
 
-    @MockitoBean
+    @MockBean
     ProfesorService profesorService;
 
     @Test

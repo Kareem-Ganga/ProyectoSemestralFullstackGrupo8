@@ -28,7 +28,7 @@ public class EstudianteTest {
     @Autowired
     MockMvc mockMvc;
 
-    @MockitoBean
+    @MockBean
     EstudianteService estudianteService;
 
     @Test

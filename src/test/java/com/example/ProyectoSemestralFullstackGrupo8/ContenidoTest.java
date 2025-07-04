@@ -25,7 +25,7 @@ public class ContenidoTest {
     @Autowired
     MockMvc mockMvc;
 
-    @MockitoBean
+    @MockBean
     ContenidoService contenidoService;
 
     @Test

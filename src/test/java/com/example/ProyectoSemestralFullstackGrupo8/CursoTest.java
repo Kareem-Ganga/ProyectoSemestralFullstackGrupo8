@@ -27,7 +27,7 @@ public class CursoTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean
+    @MockBean
     private CursoService cursoService;
 
     @Test

@@ -12,7 +12,7 @@
 	<artifactId>ProyectoSemestralFullstackGrupo8</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ProyectoSemestralFullstackGrupo8</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Sistema de gestión para el proyecto semestral del Grupo 8 en DSY1103</description>
 	<url/>
 	<licenses>
 		<license/>
